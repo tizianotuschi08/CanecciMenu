@@ -1,0 +1,8 @@
+name: CanecciMenu
+version: '1.0.0-SNAPSHOT'
+main: org.example.com.canecciMenu.Main
+api-version: '1.21'
+authors: [ TittoFresh ]
+description: A custom menu with custom items
+commands:
+  caneccimenu:
