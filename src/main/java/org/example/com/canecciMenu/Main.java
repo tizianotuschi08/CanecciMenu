@@ -8,6 +8,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         getCommand("caneccimenu").setExecutor(new MenuCommand(this));
+        getCommand("caneccimenu").setTabCompleter(new MenuTabComplete());
         Bukkit.getPluginManager().registerEvents(new MenuListener(this), this);
         
         if (!(getDataFolder().exists())) {

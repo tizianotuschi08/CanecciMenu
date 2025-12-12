@@ -10,16 +10,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class MenuCommand implements CommandExecutor {
     
+    private HashMap<UUID, PermissionAttachment> permissions = new HashMap<>();
     private Main main;
     
     public MenuCommand(Main main) {
@@ -28,12 +32,40 @@ public class MenuCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!(commandSender instanceof Player));
+        if(!(commandSender instanceof Player)) return true;
         Player player = (Player) commandSender;
+        PermissionAttachment attachment;
+        
+        if (strings.length == 1) {
+            if (strings[0].equals("perm")) {
+                if (!permissions.containsKey(player.getUniqueId())) {
+                    attachment = player.addAttachment(main);
+                    permissions.put(player.getUniqueId(), attachment);
+                }
+                else{
+                    attachment = permissions.get(player.getUniqueId());
+                }
+                
+                if (player.hasPermission("caneccimenu.command")) {
+                    attachment.unsetPermission("caneccimenu.command");
+                    player.sendMessage(ChatColor.RED + "Permission to sue caneccimenu removed!");
+                    return true;
+                }
+                else{
+                    attachment.setPermission("caneccimenu.command", true);
+                    player.sendMessage(ChatColor.GREEN + "Permission to use caneccimenu added!");
+                    return true;
+                }
+            }
+        }
+        if (!player.hasPermission("caneccimenu.command")) {
+            player.sendMessage(ChatColor.RED + "You don't have permission!");
+            return true;
+        }
         
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         
-        Inventory inventory = Bukkit.createInventory(player, 45, ChatColor.LIGHT_PURPLE + "Canecci Menu");
+        Inventory inventory = Bukkit.createInventory(player, 27, ChatColor.LIGHT_PURPLE + "Canecci Menu");
         
         // Set up Canecci Sword o menu
         ItemStack canecciSwordItem = new ItemStack(Material.DIAMOND_SWORD);// Set up sword meta
@@ -41,7 +73,7 @@ public class MenuCommand implements CommandExecutor {
         canecciSwordMenuMeta.setDisplayName(ChatColor.AQUA.toString() + ChatColor.BOLD + "Canecci Sword");
         canecciSwordMenuMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to recive Canecci Sword!"));
         canecciSwordItem.setItemMeta(canecciSwordMenuMeta);
-        inventory.setItem(20, canecciSwordItem);
+        inventory.setItem(11, canecciSwordItem);
         
         // Set up Canecci Potion
         ItemStack canecciPotionItem = new ItemStack(Material.POTION);
@@ -49,7 +81,7 @@ public class MenuCommand implements CommandExecutor {
         canecciPotionMenuMeta.setDisplayName(ChatColor.GREEN.toString() + ChatColor.BOLD + "Canecci Potion");
         canecciPotionMenuMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to recive Canecci Potion!"));
         canecciPotionItem.setItemMeta(canecciPotionMenuMeta);
-        inventory.setItem(22, canecciPotionItem);
+        inventory.setItem(13, canecciPotionItem);
         
         // Set up Canecci Map
         ItemStack canecciMapItem = new ItemStack(Material.FILLED_MAP);
@@ -57,7 +89,23 @@ public class MenuCommand implements CommandExecutor {
         canecciMapMenuMeta.setDisplayName(ChatColor.YELLOW.toString() + ChatColor.BOLD + "Canecci Map");
         canecciMapMenuMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to recive Canecci Map!"));
         canecciMapItem.setItemMeta(canecciMapMenuMeta);
-        inventory.setItem(24, canecciMapItem);
+        inventory.setItem(15, canecciMapItem);
+        
+        // Set up Canecci hologram
+        ItemStack glassPain = new ItemStack(Material.MAGENTA_STAINED_GLASS_PANE);
+        ItemMeta glassPainItemMeta = glassPain.getItemMeta();
+        glassPainItemMeta.setDisplayName(ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Canecci Hologram");
+        glassPainItemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to recive Canecci Hologram!"));
+        glassPain.setItemMeta(glassPainItemMeta);
+        inventory.setItem(12, glassPain);
+        
+        // Set up Canecci Book
+        ItemStack book = new  ItemStack(Material.BOOK);
+        ItemMeta bookItemMeta = book.getItemMeta();
+        bookItemMeta.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD + "Canecci Book");
+        bookItemMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to recive CanecciBook!"));
+        book.setItemMeta(bookItemMeta);
+        inventory.setItem(14, book);
         
         // Set up close button
         ItemStack close = new ItemStack(Material.PLAYER_HEAD);
@@ -85,7 +133,7 @@ public class MenuCommand implements CommandExecutor {
         meta4.setDisplayName("");               // Nome vuoto per i bordi
         border.setItemMeta(meta4);
         // Posiziona l'item bordo in tutti gli slot indicati
-        for (int i : new int[]{1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,37,38,39,40,41,42,43,44}) {
+        for (int i : new int[]{1,2,3,4,5,6,7,8,9,17,18, 19, 20, 21, 22, 23, 24, 25, 26}) {
             inventory.setItem(i, border);
         }
         

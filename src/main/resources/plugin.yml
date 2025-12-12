@@ -4,5 +4,9 @@ main: org.example.com.canecciMenu.Main
 api-version: '1.21'
 authors: [ TittoFresh ]
 description: A custom menu with custom items
+permissions:
+  caneccimenu.command:
+    description: a permission to use caneccimenu command
+    default: false
 commands:
   caneccimenu:
